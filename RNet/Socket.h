@@ -1,0 +1,22 @@
+#pragma once
+#include "SocketHandle.h"
+#include "RResult.h"
+#include "IPVersion.h"
+
+namespace RNet
+{
+	class Socket
+	{
+	public:
+		Socket(	IPVersion ipversion = IPVersion::IPv4,
+				SocketHandle handle = INVALID_SOCKET);
+		RResult Create();
+		RResult Close();
+		SocketHandle GetHandle();
+		IPVersion GetIPVersion();
+
+	private:
+		IPVersion ipversion = IPVersion::IPv4;
+		SocketHandle handle = INVALID_SOCKET;
+	};
+}
