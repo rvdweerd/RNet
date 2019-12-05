@@ -2,6 +2,7 @@
 #include "SocketHandle.h"
 #include "RResult.h"
 #include "IPVersion.h"
+#include "SocketOptions.h"
 
 namespace RNet
 {
@@ -16,6 +17,7 @@ namespace RNet
 		IPVersion GetIPVersion();
 
 	private:
+		RResult SetSocketOption(SocketOption option, BOOL value);
 		IPVersion ipversion = IPVersion::IPv4;
 		SocketHandle handle = INVALID_SOCKET;
 	};

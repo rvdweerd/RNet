@@ -133,6 +133,7 @@
     <ClInclude Include="RResult.h" />
     <ClInclude Include="Socket.h" />
     <ClInclude Include="SocketHandle.h" />
+    <ClInclude Include="SocketOptions.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Network.cpp" />

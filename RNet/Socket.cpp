@@ -1,5 +1,6 @@
 #include "Socket.h"
 #include <assert.h>
+#include <iostream>
 //#include "SocketHandle.h"
 //#include "RResult.h"
 //#include "IPVersion.h"
@@ -27,7 +28,11 @@ namespace RNet
 			int  error = WSAGetLastError();
 			return RResult::R_NotYetImplemented;
 		}
-		
+		if (SetSocketOption(RNet::SocketOption::TCP_NoDelay, TRUE) != RNet::RResult::R_Success)
+		{
+			return RNet::RResult::R_NotYetImplemented;
+		}
+		std::cout << "Socket option set to TCP_NODELAY = TRUE.\n";
 		return RResult::R_Success;
 	}
 
@@ -55,5 +60,24 @@ namespace RNet
 	IPVersion Socket::GetIPVersion()
 	{
 		return ipversion;
+	}
+	RResult Socket::SetSocketOption(SocketOption option, BOOL value)
+	{
+		int result = 0;
+		switch (option)
+		{
+		case SocketOption::TCP_NoDelay:
+			result = setsockopt(handle, IPPROTO_TCP, TCP_NODELAY, (const char*)&value, sizeof(value));
+			break;
+		default:
+			return RResult::R_NotYetImplemented;
+		}
+
+		if (result != 0) // if an error occured
+		{
+			int error = WSAGetLastError();
+			return RResult::R_NotYetImplemented;
+		}
+		return RResult::R_Success;
 	}
 }
