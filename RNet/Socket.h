@@ -3,6 +3,7 @@
 #include "RResult.h"
 #include "IPVersion.h"
 #include "SocketOptions.h"
+#include "IPEndPoint.h"
 
 namespace RNet
 {
