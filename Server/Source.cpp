@@ -3,14 +3,14 @@
 #include <iostream>
 
 
-
 int main()
 {
 	if (RNet::Network::Initialize())
 	{
 		std::cout << "Winsock api successfully initialized." << std::endl;
 
-		RNet::IPEndPoint test("127.0.0.1", 8080);
+		//RNet::IPEndPoint test("127.0.0.1", 8080);
+		RNet::IPEndPoint test("www.google.com", 80);
 		if (test.GetIPVersion() == RNet::IPVersion::IPv4)
 		{
 			std::cout << "Hostname: " << test.GetHostName()<<std::endl;

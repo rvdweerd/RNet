@@ -17,10 +17,36 @@ RNet::IPEndPoint::IPEndPoint(const char* ip, unsigned short port)
 			ip_string = ip;
 			hostname = ip;// ip entered, not a hostname
 			ip_bytes.resize(sizeof(ULONG));
-			memcpy(&ip_bytes[0], &addr.S_un.S_addr, sizeof(ULONG)); //[0] can be left out?
+			memcpy(&ip_bytes[0], &addr.S_un.S_addr, sizeof(ULONG)); //could use ip_bytes.data() as well as first arg
 			ipversion = IPVersion::IPv4;
 			return;
 		}
+	}
+
+	// Attempt to resolve hostname to ipv4 address
+	addrinfo hints = {}; //hints will filter the results we get back for getaddrinfo
+	addrinfo* hostinfo = nullptr;
+	hints.ai_family = AF_INET; //ipv4 addresses only
+	//hints.ai_socktype = SOCK_STREAM; //tcp
+	//hints.ai_protocol = IPPROTO_TCP;
+	result = getaddrinfo(ip, NULL, &hints, &hostinfo);
+	if (result == 0)
+	{
+		sockaddr_in* host_addr = reinterpret_cast<sockaddr_in*>(hostinfo->ai_addr); // or cast using (sockaddr_in*); use sockaddr_in6 for ipv6
+		
+		ip_string.resize(16);
+		inet_ntop(AF_INET, &host_addr->sin_addr, &ip_string[0], 16); // convert from network to presentation format
+		//host_addr->sin_addr.S_un.S_un_b.s_b1;
+
+		hostname = ip;
+		ULONG ip_long = host_addr->sin_addr.S_un.S_addr;
+		ip_bytes.resize(sizeof(ULONG));
+		memcpy(&ip_bytes[0], &ip_long, sizeof(ULONG));
+
+		ipversion = IPVersion::IPv4;
+				
+		freeaddrinfo(hostinfo);
+		return;
 	}
 }
 
